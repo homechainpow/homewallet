@@ -33,12 +33,17 @@ jobs:
             libssl-dev automake liblzma-dev python3-dev \
             libjpeg-dev libpng-dev
           pip install --upgrade pip
-          pip install --upgrade buildozer cython virtualenv
+          # CRITICAL: Force Cython < 3.0 to avoid 'long' type errors in jnius
+          pip install "Cython==0.29.36" virtualenv
+
+      - name: Clean Buildozer Cache
+        run: |
+          # Remove previous build artifacts to ensure Cython downgrade takes effect
+          rm -rf .buildozer
+          rm -rf bin
 
       - name: Build with Buildozer
         run: |
-          # 'yes' command handles the license agreement prompts automatically
-          # Force verbose output to see errors if it fails again
           yes | buildozer android debug verbose
 
       - name: Upload APK
