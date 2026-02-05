@@ -28,16 +28,18 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            git zip unzip autoconf libtool pkg-config zlib1g-dev \
+            build-essential git zip unzip autoconf libtool pkg-config zlib1g-dev \
             libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev \
-            libssl-dev automake
+            libssl-dev automake liblzma-dev python3-dev \
+            libjpeg-dev libpng-dev
           pip install --upgrade pip
           pip install --upgrade buildozer cython virtualenv
 
       - name: Build with Buildozer
         run: |
           # 'yes' command handles the license agreement prompts automatically
-          yes | buildozer android debug
+          # Force verbose output to see errors if it fails again
+          yes | buildozer android debug verbose
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
