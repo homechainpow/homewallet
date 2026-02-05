@@ -34,17 +34,18 @@ jobs:
             libjpeg-dev libpng-dev
           pip install --upgrade pip
           # CRITICAL: Force Cython < 3.0 to avoid 'long' type errors in jnius
-          pip install "Cython==0.29.36" virtualenv
+          pip install "Cython==0.29.36" virtualenv buildozer
 
       - name: Clean Buildozer Cache
         run: |
-          # Remove previous build artifacts to ensure Cython downgrade takes effect
           rm -rf .buildozer
           rm -rf bin
 
       - name: Build with Buildozer
         run: |
-          yes | buildozer android debug verbose
+          # Add pip bin to PATH
+          export PATH="$HOME/.local/bin:$PATH"
+          yes | python -m buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
